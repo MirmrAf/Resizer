@@ -53,7 +53,7 @@ namespace Resizer
         }
         public void ChangeResultImage()
         {
-            ResultImageContent.Source = ToBitmapImage(resultImage);
+            Dispatcher.Invoke(new Action(() => ResultImageContent.Source = ToBitmapImage(resultImage)));
         }
 
         public MainWindow()
