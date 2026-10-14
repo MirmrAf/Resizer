@@ -1,0 +1,52 @@
+﻿<Window x:Class="Resizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Resizer"
+        xmlns:Utils="clr-namespace:Resizer.CoreUtils"
+        mc:Ignorable="d"
+        Title="SimpleResizer" Height="500" Width="900" Icon="/Images/Icon/SRIcon.png">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Name="MenuBar" Height="auto"/>
+            <RowDefinition x:Name="Viewport" Height="*"/>
+            <RowDefinition x:Name="ResSettings" Height="0.5*"/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Click="OpenFile_Click"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+
+            </MenuItem>
+            <MenuItem Header="About">
+
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1" Background="LightGray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="0.01*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Viewbox Stretch="UniformToFill" Margin="5,5,5,5" Grid.Column="0">
+                <Utils:ZoomBorder x:Name="MainImage" ClipToBounds="True" Background="Gray">
+                    <Image x:Name="MainImageContent" Stretch="Uniform" Source="/Images/Placeholder/ImagePlaceholder.png" />
+                </Utils:ZoomBorder>
+            </Viewbox>
+            <Border Background="White" Grid.Column="1"/>
+            <Viewbox Stretch="UniformToFill" Margin="5,5,5,5" Grid.Column="2">
+                <Utils:ZoomBorder x:Name="ResultImage" ClipToBounds="True" Background="Gray">
+                    <Image x:Name="ResultImageContent" Stretch="Uniform" Source="/Images/Placeholder/ImagePlaceholder.png" />
+                </Utils:ZoomBorder>
+            </Viewbox>
+
+        </Grid>
+        <Canvas Margin="5,5,5,5" Grid.Row="2">
+            <Button x:Name="ScaleStart" Height="25" Width="80" Canvas.Left="784" Canvas.Top="100" Click="ScaleStart_Click">
+                <Button.Content>Начать</Button.Content>
+            </Button>
+        </Canvas>
+    </Grid>
+</Window>
