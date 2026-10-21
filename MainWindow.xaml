@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Resizer"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:Utils="clr-namespace:Resizer.CoreUtils"
         mc:Ignorable="d"
         Title="SimpleResizer" Height="500" Width="900" Icon="/Images/Icon/SRIcon.png">
@@ -11,17 +12,20 @@
         <Grid.RowDefinitions>
             <RowDefinition Name="MenuBar" Height="auto"/>
             <RowDefinition x:Name="Viewport" Height="*"/>
-            <RowDefinition x:Name="ResSettings" Height="0.5*"/>
+            <RowDefinition x:Name="ResSettings" Height="0.3*"/>
         </Grid.RowDefinitions>
         <Menu>
             <MenuItem Header="File">
-                <MenuItem Header="Open" Click="OpenFile_Click"/>
+                <MenuItem Header="Open" Click="OpenFile_Click" ToolTip="Загрузить в программу картинку."/>
+                <MenuItem Header="Save" Click="SaveFile_Click" ToolTip="Сохранить преобразованную картинку."/>
+                <MenuItem Header="Straight save" Click="StraightSaveFile_Click" ToolTip="Прямое сохранение ОСНОВНОЙ картинки, без преобразования. Полезно для если нужно просто кновертировать картинку."/>
             </MenuItem>
             <MenuItem Header="Edit">
-
+                <MenuItem Header="Reset main image" Click="ResetMainMenuItem_Click" ToolTip="Сбрасывает загруженную картинку."></MenuItem>
+                <MenuItem Header="Reset result image" Click="ResetResMenuItem_Click" ToolTip="Сбрасывает преобразованную картинку."></MenuItem>
             </MenuItem>
-            <MenuItem Header="About">
-
+            <MenuItem Header="Help">
+                <MenuItem Header="About" Click="AboutMenuItem_Click" ToolTip="О программе."/>
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1" Background="LightGray">
@@ -30,23 +34,49 @@
                 <ColumnDefinition Width="0.01*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Viewbox Stretch="UniformToFill" Margin="5,5,5,5" Grid.Column="0">
+            <Viewbox Stretch="UniformToFill" Grid.Column="0">
                 <Utils:ZoomBorder x:Name="MainImage" ClipToBounds="True" Background="Gray">
                     <Image x:Name="MainImageContent" Stretch="Uniform" Source="/Images/Placeholder/ImagePlaceholder.png" />
                 </Utils:ZoomBorder>
             </Viewbox>
             <Border Background="White" Grid.Column="1"/>
-            <Viewbox Stretch="UniformToFill" Margin="5,5,5,5" Grid.Column="2">
+            <Viewbox Stretch="UniformToFill" Grid.Column="2">
                 <Utils:ZoomBorder x:Name="ResultImage" ClipToBounds="True" Background="Gray">
-                    <Image x:Name="ResultImageContent" Stretch="Uniform" Source="/Images/Placeholder/ImagePlaceholder.png" />
+                    <Image x:Name="ResultImageContent" Stretch="Uniform" Source="/Images/Placeholder/ImagePlaceholder.png"/>
                 </Utils:ZoomBorder>
+
             </Viewbox>
+            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5" FontSize="20" Grid.Column="0" Opacity="0.3">Main image</TextBlock>
+            <TextBlock VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5" FontSize="20" Grid.Column="2" Opacity="0.3">Result image</TextBlock>
+            <TextBlock x:Name="inputSizeText" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5" FontSize="20" Grid.Column="0" Opacity="0.6">None</TextBlock>
+            <TextBlock x:Name="resultSizeText" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5" FontSize="20" Grid.Column="2" Opacity="0.6">None</TextBlock>
 
         </Grid>
-        <Canvas Margin="5,5,5,5" Grid.Row="2">
-            <Button x:Name="ScaleStart" Height="25" Width="80" Canvas.Left="784" Canvas.Top="100" Click="ScaleStart_Click">
-                <Button.Content>Начать</Button.Content>
-            </Button>
-        </Canvas>
+        <Separator Background="DarkGray" Margin="5" Grid.Row="2" VerticalAlignment="Top"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="10">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0">
+                    <TextBlock VerticalAlignment="Center" FontSize="14" Margin="10">Method</TextBlock>
+                    <ComboBox x:Name="InterpolationMethodSelect" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="InterpolationMethodSelect_SelectionChanged"/>
+                </StackPanel>
+                <!--<Separator Grid.Row="1" Grid.ColumnSpan="3" VerticalAlignment="Top"/>-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" >
+                    <TextBlock VerticalAlignment="Center" FontSize="14" Margin="10">Size</TextBlock>
+                    <TextBlock VerticalAlignment="Center" FontSize="16" Margin="2">X</TextBlock>
+                    <xctk:IntegerUpDown x:Name="SizeBoxX" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Margin="2,2,10,0" DefaultValue="100" ValueChanged="SizeX_Changed" AutomationProperties.HelpText="X size" DisplayDefaultValueOnEmptyText="True"/>
+
+                    <TextBlock VerticalAlignment="Center" FontSize="16" Margin="2">Y</TextBlock>
+                    <xctk:IntegerUpDown x:Name="SizeBoxY" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Margin="2,2,0,0" DefaultValue="100" ValueChanged="SizeY_Changed" AutomationProperties.HelpText="YSize" DisplayDefaultValueOnEmptyText="True"/>
+                </StackPanel>
+            </StackPanel>
+
+        </StackPanel>
+        
+
+        <!--<Separator Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Top" />-->
+        <Button x:Name="ScaleStart" Height="25" Width="80" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10" Grid.Row="2" Click="ScaleStart_Click">
+            <Button.Content>Начать</Button.Content>
+        </Button>
+
     </Grid>
 </Window>

@@ -14,9 +14,10 @@ namespace Resizer.CoreUtils
     public class ZoomBorder : Border
     {
         private UIElement child = null;
+        //private Size childImageSize = new Size();
         private Point origin;
         private Point start;
-        private Size PrimaryScreenSize = new Size(System.Windows.SystemParameters.PrimaryScreenWidth, System.Windows.SystemParameters.PrimaryScreenHeight);
+        //private Size PrimaryScreenSize = new Size(System.Windows.SystemParameters.PrimaryScreenWidth, System.Windows.SystemParameters.PrimaryScreenHeight);
         
         private TranslateTransform GetTranslateTransform(UIElement element)
         {
@@ -60,7 +61,7 @@ namespace Resizer.CoreUtils
                 this.PreviewMouseRightButtonDown += new MouseButtonEventHandler(
                   child_PreviewMouseRightButtonDown);
             }
-            Debug.WriteLine(PrimaryScreenSize);
+            //Debug.WriteLine(PrimaryScreenSize);
         }
 
         public void Reset()
@@ -76,6 +77,7 @@ namespace Resizer.CoreUtils
                 var tt = GetTranslateTransform(child);
                 tt.X = 0.0;
                 tt.Y = 0.0;
+                
             }
         }
 
@@ -149,6 +151,7 @@ namespace Resizer.CoreUtils
                 }
             }
         }
+
 
         #endregion
     }

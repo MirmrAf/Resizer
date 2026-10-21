@@ -1,0 +1,31 @@
+﻿<Window x:Class="Resizer.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Resizer"
+        xmlns:Utils="clr-namespace:Resizer.CoreUtils"
+        mc:Ignorable="d"
+        Title="About" Height="450" Width="450" ResizeMode="NoResize" ShowInTaskbar="False" WindowStyle="ToolWindow">
+    <Grid>
+        <Grid Margin="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <Label FontWeight="Bold">About programm</Label>
+                <TextBlock Margin="15,0,0,0">Simple Resizing tool.</TextBlock>
+                <Label FontWeight="Bold">Keys:</Label>
+                <TextBlock Margin="15,0,0,0">Pan - Left mouse button</TextBlock>
+                <TextBlock Margin="15,0,0,0">Reset image position and scale - Right mouse button</TextBlock>
+                <TextBlock Margin="15,0,0,0">Zoom - Mouse Wheel Up/Down</TextBlock>
+                <Label FontSize="16" FontWeight="Bold">Credits:</Label >
+            </StackPanel>
+
+            <ScrollViewer x:Name="Scroll" Margin="10"  ClipToBounds="True" VerticalScrollBarVisibility="Visible" Grid.Row="1">
+                <StackPanel x:Name="CreditsPanel" CanVerticallyScroll="True"/>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>

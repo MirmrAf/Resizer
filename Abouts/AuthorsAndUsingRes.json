@@ -1,6 +1,6 @@
 [
   {
-    "Author": "MirmrAf",
+    "Author": "MirmrAf -- It's me'",
     "Github": "https://github.com/MirmrAf",
     "Content": "The main program"
   },
@@ -8,5 +8,15 @@
     "Author": "Wiesław Šoltés",
     "Github": "https://github.com/wieslawsoltes",
     "Content": "ZoomPanel"
+  },
+  {
+    "Author": "ChatGPT",
+    "Github": "---",
+    "Content": "Custom interpolation method ScaleAwareLanczos3. Cuz math ain't my thing"
+  },
+  {
+    "Author": "Danponama",
+    "Github": "---",
+    "Content":  "Моральная поддержка и просто толстяк"
   }
 ]
