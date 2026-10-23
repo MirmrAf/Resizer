@@ -1,4 +1,6 @@
 <Solution>
-  <Project Path="../ResizerSetup/ResizerSetup.vdproj" Type="Installer" />
+  <Project Path="../ResizerSetup/ResizerSetup.vdproj" Type="Installer">
+    <Build />
+  </Project>
   <Project Path="Resizer.csproj" />
 </Solution>

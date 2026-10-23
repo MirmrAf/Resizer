@@ -1,4 +1,9 @@
 ﻿using Microsoft.Win32;
+using NetSparkleUpdater
+
+
+using NetSparkleUpdater.Enums;
+using NetSparkleUpdater.SignatureVerifiers;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using Resizer.CoreUtils;
@@ -30,6 +35,9 @@ namespace Resizer
         public string resultImageSize = "";
 
         public ResizerTool.ResizeSettings resizeSettings;
+
+
+        private SparkleUpdater _sparkle;
 
         public BitmapImage ToBitmapImage(Bitmap bitmap)
         {
@@ -121,6 +129,21 @@ namespace Resizer
             //{
 
             //}
+
+
+            // on your main thread...
+            _sparkle = new SparkleUpdater(
+                "https://mywebsite.com/appcast.xml", // link to your app cast file - change extension to .json if using json
+                new Ed25519Checker(SecurityMode.Strict, // security mode -- use .Unsafe to ignore all signature checking (NOT recommended!!)
+                           "Nam3y/KR3PCKZKX7+vLgWdFPeMd/yvkTM6Yl3uOV7Hc=") // your base 64 public key
+            )
+            {
+                UIFactory = new NetSparkleUpdater.UI.WPF.UIFactory(this.Icon), // or null, or choose some other UI factory, or build your own IUIFactory implementation!
+                RelaunchAfterUpdate = false, // set to true if needed
+            };
+            _sparkle.StartLoop(true); // will auto-check for updates
+
+
         }
 
         private void OnWorkerComplete(Bitmap result)
