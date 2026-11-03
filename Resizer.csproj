@@ -2,12 +2,14 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
 	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<ApplicationIcon>SRIcon.ico</ApplicationIcon>
+	<ApplicationIcon>SRIcon1.ico</ApplicationIcon>
+	<StartupObject>Resizer.App</StartupObject>
+	<SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,11 +27,13 @@
     <Content Include="Images\Placeholder\ImagePlaceholder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="SRIcon.ico" />
+    <Content Include="SRIcon1.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="5.1.2" />
+    <PackageReference Include="NetSparkleUpdater.SparkleUpdater" Version="3.1.0" />
+    <PackageReference Include="NetSparkleUpdater.UI.WPF" Version="3.1.0" />
     <PackageReference Include="OpenCvSharp4" Version="4.13.0.20260627" />
     <PackageReference Include="OpenCvSharp4.Extensions" Version="4.13.0.20260627" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.13.0.20260627" />
