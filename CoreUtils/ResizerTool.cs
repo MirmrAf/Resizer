@@ -33,6 +33,12 @@ namespace Resizer.CoreUtils
         public delegate void WorkerComplete(Bitmap resultImage);
         public event WorkerComplete worker_Complete;
 
+        public enum SizeMode
+        {  
+            PerPixel = 1,
+            PerPercent = 2
+        }
+
         public enum ResizeInterpolation
         {
             Nearest = (int)InterpolationFlags.Nearest,
@@ -52,12 +58,14 @@ namespace Resizer.CoreUtils
             public ResizeInterpolation Method = ResizeInterpolation.Linear;
             public double fx = 0;
             public double fy = 0;
+            public SizeMode SM = SizeMode.PerPixel;
 
-            public ResizeSettings(OpenCvSharp.Size imgSize, ResizeInterpolation method, double _fx, double _fy)
+            public ResizeSettings(OpenCvSharp.Size imgSize, ResizeInterpolation method, double _fx, double _fy, SizeMode sizeMode)
             {
                 ImgSize = imgSize;
                 Method = method;
                 fx = _fx; fy = _fy;
+                SM = sizeMode;
             }
 
         };
@@ -80,21 +88,34 @@ namespace Resizer.CoreUtils
             _bgWorker.DoWork += (s, e) =>
             {
 
+                int Width = Settings.ImgSize.Width;
+
+                int Height = Settings.ImgSize.Height;
+                
+                if (Settings.SM == SizeMode.PerPercent)
+                {
+                    double wP = (double)Settings.ImgSize.Width / 100;
+                    double hP = (double)Settings.ImgSize.Height / 100;
+                    Width = (int)(mainImg.Width * wP);
+                    
+                    Height = (int)(mainImg.Height * hP);
+                }
+
                 try
                 {
                     if (Settings.Method == ResizeInterpolation.ScaleAwareLanczos3)
                     {
-                        ScaleAwareLanczos3.Resize(img, Settings.ImgSize.Width, Settings.ImgSize.Height).CopyTo(res);
+                        ScaleAwareLanczos3.Resize(img, Width, Height).CopyTo(res);
                     }
                     else
                     {
-                        res = img.Resize(Settings.ImgSize, Settings.fx, Settings.fy, (InterpolationFlags)Settings.Method);
+                        res = img.Resize(new OpenCvSharp.Size(Width, Height), Settings.fx, Settings.fy, (InterpolationFlags)Settings.Method);
                     }
                 }
                 catch (OpenCVException ex)
                 {
                     MessageBox.Show($"Ошибка: {ex.Message}\n Интерполяция будет проведена в режиме Linear.", "Ошибка интреполяции!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    res = img.Resize(Settings.ImgSize, Settings.fx, Settings.fy, InterpolationFlags.Linear);
+                    res = img.Resize(new OpenCvSharp.Size(Width, Height), Settings.fx, Settings.fy, InterpolationFlags.Linear);
                 }
                 
                 worker_Complete?.Invoke(res.ToBitmap());

@@ -1,18 +1,15 @@
 ﻿using Microsoft.Win32;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
+using OpenCvSharp.WpfExtensions;
 using Resizer.CoreUtils;
+using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Xceed.Wpf.Toolkit.Core;
-using Xceed.Wpf.Toolkit.Primitives;
+
 
 namespace Resizer
 {
@@ -21,6 +18,7 @@ namespace Resizer
     /// </summary>
     public partial class MainWindow : System.Windows.Window
     {
+
         readonly private Bitmap placeholder = new("Images/Placeholder/ImagePlaceholder.png");
         public ResizerTool resizer = new ResizerTool();   
         public Bitmap currentMainImage;
@@ -28,26 +26,9 @@ namespace Resizer
 
         public string mainImageSize = "";
         public string resultImageSize = "";
-
+        public ResizerTool.SizeMode _sizeMode = ResizerTool.SizeMode.PerPixel;
         public ResizerTool.ResizeSettings resizeSettings;
 
-        public BitmapImage ToBitmapImage(Bitmap bitmap)
-        {
-            using (var memory = new MemoryStream())
-            {
-                bitmap.Save(memory, ImageFormat.Png);
-                memory.Position = 0;
-
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.StreamSource = memory;
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.EndInit();
-                bitmapImage.Freeze();
-
-                return bitmapImage;
-            }
-        }
 
         private void ChangeMainImage()
         {
@@ -58,7 +39,7 @@ namespace Resizer
                 currentMainImage = img;
             }
             else img = currentMainImage;
-            MainImageContent.Source = ToBitmapImage(img);
+            MainImageContent.Source = ConverterHelper.ToBitmapImage(img);
             MainImage.Reset();
             mainImageSize = $"{img.Size.Width}x{img.Size.Height}";
             inputSizeText.Text = mainImageSize;
@@ -73,7 +54,7 @@ namespace Resizer
                 resultImage = img;
 
                 Dispatcher.Invoke(new Action(() => {
-                    ResultImageContent.Source = ToBitmapImage(img);
+                    ResultImageContent.Source = ConverterHelper.ToBitmapImage(img);
                     ResultImage.Reset();
                 }));
 
@@ -85,7 +66,7 @@ namespace Resizer
                 img = resultImage;
 
                 Dispatcher.Invoke(new Action(() => {
-                    ResultImageContent.Source = ToBitmapImage(img);
+                    ResultImageContent.Source = ConverterHelper.ToBitmapImage(img);
                     ResultImage.Reset();
                 }));
 
@@ -112,15 +93,77 @@ namespace Resizer
             {
                 MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            //MainImage.PreviewKeyDown += KeyDownPicture1;
+            //MainImageContent.GotKeyboardFocus += (s,e) => { Debug.WriteLine($"new {e.NewFocus}, old {e.OldFocus}"); };
+            MainImage.CommandBindings.Add(new CommandBinding(ApplicationCommands.Paste, PasteImage));
             resizer.worker_Complete += OnWorkerComplete;
             InterpolationMethodSelect.Items.Clear();
             InterpolationMethodSelect.ItemsSource = Enum.GetValues<ResizerTool.ResizeInterpolation>();
-
             InterpolationMethodSelect.SelectedIndex = 1;
+
             //for (int i = 0; i<Enum.GetNames(typeof(InterpolationFlags)).Length; i++)
             //{
 
             //}
+
+            //Task.Run(() =>
+            //{
+            //    while (true)
+            //    {
+            //        Thread.Sleep(100);
+            //        Dispatcher.Invoke(new Action(() =>
+            //        {
+            //            Debug.WriteLine(Keyboard.FocusedElement);
+
+            //        }));
+
+            //    }
+            //});
+        }
+
+        private void MainImage_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            //foreach (string file in files) Debug.WriteLine(file);
+            string file = files.Last();
+            Debug.WriteLine(file);
+
+            if (file.ToLower().EndsWith(".png") || file.ToLower().EndsWith(".jpg") || 
+                file.ToLower().EndsWith(".jpeg") || file.ToLower().EndsWith(".tif") || 
+                file.ToLower().EndsWith(".ico") || file.ToLower().EndsWith(".jfif")) //*.jpg;*.jpeg;*.png;*.tif;*.ico
+            {
+                currentMainImage = new Bitmap(file);
+                ChangeMainImage();
+            }
+        }
+
+        private void MainImage_DragEnter(object sender, DragEventArgs e)
+        {
+            Debug.WriteLine("DragEnter!");
+            e.Effects = DragDropEffects.Copy;
+        }
+
+
+        private void PasteImage(object sender, ExecutedRoutedEventArgs e)
+        {
+
+
+            BitmapSource img = Clipboard.GetImage();
+            if (img != null)
+            {
+                currentMainImage = new Bitmap(ConverterHelper.BitmapFromSource(img));
+                ChangeMainImage();
+            }
+
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) 
+            {
+                ScaleStartFunc();
+            }
         }
 
         private void OnWorkerComplete(Bitmap result)
@@ -131,6 +174,15 @@ namespace Resizer
             MessageBox.Show("ResizeCompleted!", "Success", MessageBoxButton.OK);
         }
 
+        private void ScaleStartFunc()
+        {
+            MessageBoxResult msg = MessageBox.Show("Are You sure to start?", "Sure?", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No);
+            if (msg == MessageBoxResult.Yes)
+            {
+                resizer.ResizeImage(currentMainImage, resizeSettings);
+            }
+        }
+
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog dial;
@@ -139,7 +191,7 @@ namespace Resizer
             try
             {
                 dial = new OpenFileDialog();
-                dial.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.tif;*.ico|All Files(*.*)|*.*";
+                dial.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.tif;*.ico;*.jfif|All Files(*.*)|*.*";
                 if (dial.ShowDialog() == true)
                 {
                     string filepath = dial.FileName;
@@ -195,8 +247,7 @@ namespace Resizer
 
         private void ScaleStart_Click(object sender, RoutedEventArgs e)
         {
-            resizer.ResizeImage(currentMainImage, resizeSettings);
-
+            ScaleStartFunc();
         }
 
         private void InterpolationMethodSelect_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -230,6 +281,24 @@ namespace Resizer
             ResultImage.Reset();
             resultImage = null;
             ChangeResultImage();
+        }
+
+        private void PercentSwitch_Click(object sender, RoutedEventArgs e)
+        {
+            switch (_sizeMode)
+            {
+                case ResizerTool.SizeMode.PerPixel:
+                    PercentSwitch.Content = "px";
+                    PercentSwitch.ToolTip = "In percent mode now";
+                    _sizeMode = ResizerTool.SizeMode.PerPercent;
+                    break;
+                case ResizerTool.SizeMode.PerPercent:
+                    PercentSwitch.Content = "%";
+                    PercentSwitch.ToolTip = "In pixel mode now";
+                    _sizeMode = ResizerTool.SizeMode.PerPixel;
+                    break;
+            }
+            resizeSettings.SM = _sizeMode;
         }
 
         //private void TextBox_OnPreviewTextInput(object sender, TextCompositionEventArgs e)

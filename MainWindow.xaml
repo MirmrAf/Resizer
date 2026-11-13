@@ -35,13 +35,13 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Viewbox Stretch="UniformToFill" Grid.Column="0">
-                <Utils:ZoomBorder x:Name="MainImage" ClipToBounds="True" Background="Gray">
+                <Utils:ZoomBorder x:Name="MainImage" ClipToBounds="True" Background="Gray" Focusable="True" DragEnter="MainImage_DragEnter" Drop="MainImage_DragDrop" AllowDrop="True">
                     <Image x:Name="MainImageContent" Stretch="Uniform" Source="/Images/Placeholder/ImagePlaceholder.png" />
                 </Utils:ZoomBorder>
             </Viewbox>
             <Border Background="White" Grid.Column="1"/>
             <Viewbox Stretch="UniformToFill" Grid.Column="2">
-                <Utils:ZoomBorder x:Name="ResultImage" ClipToBounds="True" Background="Gray">
+                <Utils:ZoomBorder x:Name="ResultImage" ClipToBounds="True" Background="Gray" Focusable="True">
                     <Image x:Name="ResultImageContent" Stretch="Uniform" Source="/Images/Placeholder/ImagePlaceholder.png"/>
                 </Utils:ZoomBorder>
 
@@ -67,6 +67,7 @@
 
                     <TextBlock VerticalAlignment="Center" FontSize="16" Margin="2">Y</TextBlock>
                     <xctk:IntegerUpDown x:Name="SizeBoxY" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Margin="2,2,0,0" DefaultValue="100" ValueChanged="SizeY_Changed" AutomationProperties.HelpText="YSize" DisplayDefaultValueOnEmptyText="True"/>
+                    <Button x:Name="PercentSwitch" Margin="8" Width="35" Content="%" FontSize="16" Click="PercentSwitch_Click" ToolTip="In pixel mode now"></Button>
                 </StackPanel>
             </StackPanel>
 

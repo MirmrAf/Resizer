@@ -85,6 +85,10 @@ namespace Resizer.CoreUtils
 
         private void child_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (Keyboard.FocusedElement != this)
+            {
+                Keyboard.Focus(this);
+            }
             if (child != null)
             {
                 var st = GetScaleTransform(child);
@@ -114,6 +118,10 @@ namespace Resizer.CoreUtils
 
         private void child_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (Keyboard.FocusedElement != this)
+            {
+                Keyboard.Focus(this);
+            }
             if (child != null)
             {
                 var tt = GetTranslateTransform(child);
@@ -144,6 +152,10 @@ namespace Resizer.CoreUtils
             {
                 if (child.IsMouseCaptured)
                 {
+                    if (Keyboard.FocusedElement != this)
+                    {
+                        Keyboard.Focus(this);
+                    }
                     var tt = GetTranslateTransform(child);
                     Vector v = start - e.GetPosition(this);
                     tt.X = origin.X - v.X;
