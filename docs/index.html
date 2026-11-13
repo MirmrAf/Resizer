@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
+  <title>SimpleResizer — простое изменение размера изображений</title>
+  <meta name="description" content="SimpleResizer — лёгкое приложение для Windows для изменения размера изображений с наглядным сравнением «до» и «после».">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="glow glow-a" aria-hidden="true"></div>
+  <div class="glow glow-b" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <header class="hero">
+      <span class="badge">Скоро · в разработке</span>
+      <h1>Simple<span class="accent">Resizer</span></h1>
+      <p class="lead">Лёгкое приложение для Windows, которое меняет размер изображений и сразу показывает результат рядом с оригиналом.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href="https://github.com/MirmrAf/Resizer">Исходный код на GitHub</a>
+      </div>
+    </header>
+
+    <section class="preview" aria-label="Схема окна программы">
+      <div class="pane">
+        <span class="pane-label">Оригинал</span>
+      </div>
+      <div class="divider" aria-hidden="true"></div>
+      <div class="pane">
+        <span class="pane-label">Результат</span>
+      </div>
+    </section>
+
+    <section class="features" aria-label="Возможности">
+      <article class="card">
+        <h2>Сравнение «до / после»</h2>
+        <p>Две панели рядом: исходное изображение и результат обработки.</p>
+      </article>
+      <article class="card">
+        <h2>Масштабирование просмотра</h2>
+        <p>Изображения в обеих панелях можно приближать и двигать, чтобы рассмотреть детали.</p>
+      </article>
+      <article class="card">
+        <h2>Популярные форматы</h2>
+        <p>Открывает файлы JPG, JPEG, PNG и TIF через стандартный диалог выбора файла.</p>
+      </article>
+      <article class="card">
+        <h2>На базе OpenCV</h2>
+        <p>Обработка изображений выполняется библиотекой OpenCV (OpenCvSharp).</p>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <p>WPF · .NET 10 · Лицензия MIT</p>
+      <p><a href="https://github.com/MirmrAf/Resizer">github.com/MirmrAf/Resizer</a></p>
+    </footer>
+  </main>
+</body>
+</html>
